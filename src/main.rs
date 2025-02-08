@@ -4,6 +4,7 @@ use axum::{
     response::{IntoResponse, Json},
     Router,
 };
+use tower_http::cors::{Any, CorsLayer};
 use std::fs;
 use std::path::Path;
 use serde::Serialize;
@@ -84,11 +85,16 @@ async fn main() -> Result<()> {
         blobs,
         node_id
     };
+
+    let cors = CorsLayer::new()
+        .allow_origin(Any) // Allow any origin (use a specific one in production)
+        .allow_methods(Any)
+        .allow_headers(Any);
     // Build Axum app
     let app = Router::new()
     .route("/upload", post(upload_file))
     .route("/node-id", get(get_node_id)) // New route for node ID
-    .with_state(app_state);
+    .with_state(app_state).layer(cors);
 
     // Start the server
     let listener = TcpListener::bind("0.0.0.0:3000").await?;

@@ -1,3 +1,12 @@
+
+
+# Iroh api 
+
+```
+cargo run
+```
+
+
 curl -X POST \
   http://localhost:3000/upload \
   -H "Content-Type: multipart/form-data" \
